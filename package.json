@@ -1,0 +1,35 @@
+{
+  "name": "routinary-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^25.0.9",
+    "eslint": "^9.39.2",
+    "eslint-plugin-stylistic": "^0.0.0-0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.6",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "prisma": "^6.19.2"
+  }
+}
