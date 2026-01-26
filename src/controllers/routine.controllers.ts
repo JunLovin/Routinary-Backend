@@ -19,7 +19,9 @@ export class RoutineController {
      
       const routine = await RoutineServices.getById(routineId as string);
 
-      if (!routine) throw new AppError("Routine not found", 404);
+      if (!routine) {
+        throw new AppError("Routine not found", 404);
+      } 
 
       res.json(routine);
     } catch (error) {
@@ -27,7 +29,7 @@ export class RoutineController {
     }
   }
 
-  static async getMyRoutines(req: Request, res: Response, next: NextFunction) {
+  static async getCurrentRoutines(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.userId;
 
@@ -73,8 +75,12 @@ export class RoutineController {
 
       const routine = await RoutineServices.getById(routineId as string);
 
-      if (!routine) throw new AppError("Routine not found", 404);
-      if (routine.userId !== userId) throw new AppError("Forbidden: You don't own this routine", 403);
+      if (!routine) {
+        throw new AppError("Routine not found", 404);
+      } 
+      if (routine.userId !== userId) {
+        throw new AppError("Forbidden: You don't own this routine", 403);
+      } 
       
       const { 
         title,
@@ -90,8 +96,6 @@ export class RoutineController {
         icsContent
       });
 
-      if (!updatedRoutine) throw new AppError("Routine not found", 404);
-
       res.json(updatedRoutine);
     } catch (error) {
       next(error);
@@ -105,8 +109,12 @@ export class RoutineController {
 
       const routineToDelete = await RoutineServices.getById(routineId as string);
 
-      if (!routineToDelete) throw new AppError("Routine not found", 404);
-      if (routineToDelete.userId !== userId) throw new AppError("Forbidden: You don't own this routine", 403);
+      if (!routineToDelete) {
+        throw new AppError("Routine not found", 404);
+      } 
+      if (routineToDelete.userId !== userId) {
+        throw new AppError("Forbidden: You don't own this routine", 403);
+      } 
       
       const routine = await RoutineServices.deleteById(routineId as string);
 

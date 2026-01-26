@@ -2,7 +2,6 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import "dotenv/config";
-import { authenticate } from "./middlewares/auth.middleware.js";
 
 import authRouter from "@/routers/auth.router.js";
 import userRouter from "@/routers/user.router.js";
@@ -22,8 +21,8 @@ app.use(cors());
 // INFO: Routers
 
 app.use('/api/auth', authRouter)
-app.use('/api/users', authenticate, userRouter)
-app.use('/api/routines', authenticate, routineRouter);
+app.use('/api/users', userRouter)
+app.use('/api/routines', routineRouter);
 
 app.use(errorHandler);
 

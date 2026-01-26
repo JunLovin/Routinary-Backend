@@ -6,12 +6,8 @@ export const getAll = async (): Promise<Routine[]> => {
   return await prisma.routine.findMany();
 }
 
-export const getById = async (id: string): Promise<Routine | undefined> => {
-  const routine = await prisma.routine.findUnique({ where: { id } });
-
-  if (!routine) return;
-
-  return routine;
+export const getById = async (id: string): Promise<Routine | null> => {
+  return await prisma.routine.findUnique({ where: { id } });
 }
 
 export const getByUserId = async (userId: string): Promise<Routine[]> => {
@@ -22,10 +18,10 @@ export const create = async (data: CreateRoutineDTO): Promise<Routine> => {
   return await prisma.routine.create({ data });
 }
 
-export const update = async (id: string, data: UpdateRoutineDTO): Promise<Routine | undefined> => {
+export const update = async (id: string, data: UpdateRoutineDTO): Promise<Routine | null> => {
   return await prisma.routine.update({ where: { id }, data });
 }
 
-export const deleteById = async (id: string): Promise<Routine | undefined> => {
+export const deleteById = async (id: string): Promise<Routine | null> => {
   return await prisma.routine.delete({ where: { id } });
 }
