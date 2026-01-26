@@ -27,6 +27,20 @@ export class UserController {
     }
   }
 
+  static async getMyUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.userId;
+
+      const user = await UserServices.getById(userId!);
+
+      if (!user) throw new AppError("User not found", 404);
+
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.params;
@@ -50,7 +64,7 @@ export class UserController {
 
       const userDeleted = await UserServices.deleteById(userId as string);
 
-      if (!userDeleted) return res.status(404).json({ error: "User not found" });
+      if (!userDeleted) throw new AppError("User not found", 404);
 
       res.json({ deleted: userDeleted });
     } catch (error) {
