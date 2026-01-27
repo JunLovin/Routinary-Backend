@@ -19,7 +19,25 @@ export class UserController {
 
       const user = await UserServices.getById(userId as string);
 
-      if (!user) throw new AppError("User not found", 404)
+      if (!user) {
+        throw new AppError("User not found", 404)
+      } 
+
+      res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getCurrentUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.userId;
+
+      const user = await UserServices.getById(userId!);
+
+      if (!user) {
+        throw new AppError("User not found", 404);
+      }
 
       res.json(user);
     } catch (error) {
@@ -34,7 +52,9 @@ export class UserController {
 
       const updatedUser = await UserServices.update(userId as string, { email, password, name });
 
-      if (!updatedUser) throw new AppError("User not found", 404);
+      if (!updatedUser) {
+        throw new AppError("User not found", 404);
+      }
 
       res.json(updatedUser);
     } catch (error) {
@@ -46,11 +66,15 @@ export class UserController {
     try {
       const { userId } = req.params;
 
-      if (!userId) throw new AppError("UserId is required", 400)
+      if (!userId) {
+        throw new AppError("UserId is required", 400)
+      } 
 
       const userDeleted = await UserServices.deleteById(userId as string);
 
-      if (!userDeleted) return res.status(404).json({ error: "User not found" });
+      if (!userDeleted) {
+        throw new AppError("User not found", 404);
+      } 
 
       res.json({ deleted: userDeleted });
     } catch (error) {
