@@ -11,7 +11,6 @@ export class RoutineController {
 
   static getById = asyncHandler(async (req: Request, res: Response) => {
     const { routineId } = req.params;
-
     const routine = await RoutineServices.getById(routineId as string);
 
     if (!routine) {
@@ -23,28 +22,24 @@ export class RoutineController {
 
   static getCurrentRoutines = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-
     const routines = await RoutineServices.getByUserId(userId as string);
 
     res.json(routines);
   })
 
-  static create = asyncHandler(async (req: Request, res: Response) => {
+  static generate = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const {
-      title,
-      description,
-      prompt,
-      icsContent,
-    } = req.body;
+    const { prompt, title } = req.body;
 
-
-    // TODO: Do validation with zod
+    // TODO: Here will be Gemini to generate .ics
+    // const icsContent = await generateICSWithAI(prompt);
+    
+    const icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\n...";
 
     const newRoutine = await RoutineServices.create({
       userId: userId!,
-      title,
-      description,
+      title: title || "My Routine",
+      description: prompt,
       prompt,
       icsContent,
     });
@@ -65,12 +60,14 @@ export class RoutineController {
       throw new AppError("Forbidden: You don't own this routine", 403);
     } 
 
-    const { 
-      title,
-      description, 
-      prompt, 
-      icsContent 
-    } = req.body;
+    const { title, description, prompt } = req.body;
+
+    let icsContent = routine.icsContent;
+
+    if (prompt && prompt !== routine.prompt) {
+      // TODO: Regenerate with AI
+      // icsContent = await generateICSWithAI(prompt);
+    }
 
     const updatedRoutine = await RoutineServices.update(routineId as string, {
       title,
