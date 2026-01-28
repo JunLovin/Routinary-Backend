@@ -1,16 +1,22 @@
 {
   "name": "routinary-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "AI-powered routine generator that transforms natural language into calendar files",
+  "main": "dist/server.js",
   "scripts": {
-    "start": "tsx watch ./src/script.ts",
+    "start": "node dist/server.js",
+    "build": "tsup src/server.ts --format esm --clean",
     "dev": "tsx watch ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "routine",
+    "calendar",
+    "ai",
+    "productivity"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
