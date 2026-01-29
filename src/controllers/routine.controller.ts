@@ -1,51 +1,51 @@
-import type { NextFunction, Request, Response } from "express";
-import * as RoutineServices from "@/services/routine.services.js";
-import { AppError } from "@/utils/AppError.js";
-import { asyncHandler } from "@/handlers/asyncHandler.js";
+import type { NextFunction, Request, Response } from 'express';
+import * as RoutineServices from '@/services/routine.services.js';
+import { AppError } from '@/utils/AppError.js';
+import { asyncHandler } from '@/handlers/asyncHandler.js';
+import { parsePromptToEvents } from '@/services/gemini.services.js';
+import { generateICS } from '@/utils/icsGenerator.js';
 
 export class RoutineController {
   static getAll = asyncHandler(async (_: Request, res: Response) => {
     const routines = await RoutineServices.getAll();
     res.json(routines);
-  })
+  });
 
   static getById = asyncHandler(async (req: Request, res: Response) => {
     const { routineId } = req.params;
     const routine = await RoutineServices.getById(routineId as string);
 
     if (!routine) {
-      throw new AppError("Routine not found", 404);
+      throw new AppError('Routine not found', 404);
     } 
 
     res.json(routine);
-  })
+  });
 
   static getCurrentRoutines = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
     const routines = await RoutineServices.getByUserId(userId as string);
 
     res.json(routines);
-  })
+  });
 
   static generate = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const { prompt, title } = req.body;
+    const { prompt } = req.body;
 
-    // TODO: Here will be Gemini to generate .ics
-    // const icsContent = await generateICSWithAI(prompt);
+    const jsonEvents = await parsePromptToEvents(prompt as string);
+    const icsContent = generateICS(jsonEvents);
     
-    const icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\n...";
-
     const newRoutine = await RoutineServices.create({
       userId: userId!,
-      title: title || "My Routine",
-      description: prompt,
+      title: jsonEvents.suggestedTitle || 'My Routine',
+      description: '',
       prompt,
       icsContent,
     });
 
     res.status(201).json(newRoutine);
-  })
+  });
 
   static update = asyncHandler(async (req: Request, res: Response) => {
     const { routineId } = req.params;
@@ -54,10 +54,10 @@ export class RoutineController {
     const routine = await RoutineServices.getById(routineId as string);
 
     if (!routine) {
-      throw new AppError("Routine not found", 404);
+      throw new AppError('Routine not found', 404);
     } 
     if (routine.userId !== userId) {
-      throw new AppError("Forbidden: You don't own this routine", 403);
+      throw new AppError('Forbidden: You don\'t own this routine', 403);
     } 
 
     const { title, description, prompt } = req.body;
@@ -65,8 +65,8 @@ export class RoutineController {
     let icsContent = routine.icsContent;
 
     if (prompt && prompt !== routine.prompt) {
-      // TODO: Regenerate with AI
-      // icsContent = await generateICSWithAI(prompt);
+      const jsonEvents = await parsePromptToEvents(prompt);
+      icsContent = generateICS(jsonEvents);
     }
 
     const updatedRoutine = await RoutineServices.update(routineId as string, {
@@ -77,7 +77,7 @@ export class RoutineController {
     });
 
     res.json(updatedRoutine);
-  })
+  });
  
   static delete = asyncHandler(async (req: Request, res: Response) => {
     const { routineId } = req.params;
@@ -86,14 +86,14 @@ export class RoutineController {
     const routineToDelete = await RoutineServices.getById(routineId as string);
 
     if (!routineToDelete) {
-      throw new AppError("Routine not found", 404);
+      throw new AppError('Routine not found', 404);
     } 
     if (routineToDelete.userId !== userId) {
-      throw new AppError("Forbidden: You don't own this routine", 403);
+      throw new AppError('Forbidden: You don\'t own this routine', 403);
     } 
 
     const routine = await RoutineServices.deleteById(routineId as string);
 
     res.json({ deleted: routine });
-  })
+  });
 }

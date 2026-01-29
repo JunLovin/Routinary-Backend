@@ -1,7 +1,7 @@
-import { RoutineController } from "@/controllers/routine.controller.js";
-import { validate } from "@/middlewares/validate.middleware.js";
-import { createRoutineSchema, updateRoutineSchema } from "@/schemas/routine.schema.js";
-import express from "express";
+import { RoutineController } from '@/controllers/routine.controller.js';
+import { validate } from '@/middlewares/validate.middleware.js';
+import { createRoutineSchema, updateRoutineSchema } from '@/schemas/routine.schema.js';
+import express from 'express';
 
 const router = express.Router();
 
