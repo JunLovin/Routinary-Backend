@@ -36,6 +36,7 @@
     "typescript-eslint": "^8.53.1"
   },
   "dependencies": {
+    "@google/genai": "^1.38.0",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^6.19.2",
     "prisma": "^6.19.2",

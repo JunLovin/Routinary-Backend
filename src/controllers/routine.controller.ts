@@ -2,6 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import * as RoutineServices from "@/services/routine.services.js";
 import { AppError } from "@/utils/AppError.js";
 import { asyncHandler } from "@/handlers/asyncHandler.js";
+import { parsePromptToEvents } from "@/services/gemini.services";
+import { generateICS } from "@/utils/icsGenerator";
 
 export class RoutineController {
   static getAll = asyncHandler(async (_: Request, res: Response) => {
@@ -29,19 +31,17 @@ export class RoutineController {
 
   static generate = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const { prompt, title } = req.body;
+    const { prompt } = req.body;
 
-    // TODO: Here will be Gemini to generate .ics
-    // const icsContent = await generateICSWithAI(prompt);
+    const events = await parsePromptToEvents(prompt as string);
+    const parsedEvent = generateICS(events);
     
-    const icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\n...";
-
     const newRoutine = await RoutineServices.create({
       userId: userId!,
-      title: title || "My Routine",
-      description: prompt,
+      title: events.suggestedTitle || "My Routine",
+      description: "",
       prompt,
-      icsContent,
+      icsContent: parsedEvent,
     });
 
     res.status(201).json(newRoutine);
@@ -65,8 +65,8 @@ export class RoutineController {
     let icsContent = routine.icsContent;
 
     if (prompt && prompt !== routine.prompt) {
-      // TODO: Regenerate with AI
-      // icsContent = await generateICSWithAI(prompt);
+      const events = await parsePromptToEvents(prompt);
+      icsContent = generateICS(events);
     }
 
     const updatedRoutine = await RoutineServices.update(routineId as string, {
