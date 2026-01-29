@@ -1,11 +1,11 @@
-import type { ParsedRoutine } from "@/types/event.type";
-import { GoogleGenAI } from "@google/genai";
-import "dotenv/config";
+import type { ParsedRoutine } from '@/types/event.type';
+import { GoogleGenAI } from '@google/genai';
+import 'dotenv/config';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
-  throw new Error("Gemini API key is missing");
+  throw new Error('Gemini API key is missing');
 };
 
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
@@ -41,17 +41,22 @@ FLOW EXAMPLE User: Tomorrow I want to wake up at 6 to run, work from 9 to 5, and
 `.trim();
 
 export const parsePromptToEvents = async (prompt: string): Promise<ParsedRoutine> => {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION
-    },
-    contents: prompt
-  });
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      config: {
+        systemInstruction: SYSTEM_INSTRUCTION
+      },
+      contents: prompt
+    });
 
-  const text = response.text;
+    const text = response.text;
 
-  const parsed = JSON.parse(text || "");
+    const parsed = JSON.parse(text || '');
 
-  return parsed as ParsedRoutine;
-}
+    return parsed as ParsedRoutine;
+  } catch (error) {
+    console.error('Error generating json with AI:', error);
+    throw error;
+  }
+};

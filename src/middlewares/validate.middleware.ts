@@ -1,6 +1,6 @@
-import { AppError } from "@/utils/AppError.js";
-import type { NextFunction, Request, Response } from "express";
-import { ZodError } from "zod/v3";
+import { AppError } from '@/utils/AppError.js';
+import type { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod/v3';
 
 export const validate = (schema: any) => {
   return async (req: Request, _: Response, next: NextFunction) => {
@@ -14,5 +14,5 @@ export const validate = (schema: any) => {
       }
       next(error);
     }
-  }
-}
+  };
+};

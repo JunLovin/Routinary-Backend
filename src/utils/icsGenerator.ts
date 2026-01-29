@@ -1,13 +1,13 @@
-import type { ParsedRoutine } from "@/types/event.type";
+import type { ParsedRoutine } from '@/types/event.type';
 
 export const generateICS = (data: ParsedRoutine): string => {
   const now = new Date();
-  const dateStr = now.toISOString().split('T')[0]?.replace(/-/g, '') // "20260129"
+  const dateStr = now.toISOString().split('T')[0]?.replace(/-/g, ''); // "20260129"
 
   const header = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//Routinary//EN",
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Routinary//EN',
     `X-WR-CALNAME:${data.suggestedTitle}`
   ];
 
@@ -17,7 +17,7 @@ export const generateICS = (data: ParsedRoutine): string => {
     const end = `${dateStr}T${e.endTime.replace(':', '')}00`;
 
     const eventLines = [
-      "BEGIN:VEVENT",
+      'BEGIN:VEVENT',
       `SUMMARY:${e.title}`,
       `DESCRIPTION:${e.description}`,
       `DTSTART:${start}`,
@@ -25,15 +25,15 @@ export const generateICS = (data: ParsedRoutine): string => {
     ];
 
     if (e.isRecurring) {
-      eventLines.push("RRULE:FREQ=DAILY"); // The event will be everyday
+      eventLines.push('RRULE:FREQ=DAILY'); // The event will be everyday
     }
 
-    eventLines.push("END:VEVENT");
+    eventLines.push('END:VEVENT');
 
-    return eventLines.join("\n");
+    return eventLines.join('\n');
   });
   
-  const footer = ["END:VCALENDAR"];
+  const footer = ['END:VCALENDAR'];
 
-  return [...header, ...body, ...footer].join("\n");
-}
+  return [...header, ...body, ...footer].join('\n');
+};

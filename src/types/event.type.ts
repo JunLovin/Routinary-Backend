@@ -4,7 +4,7 @@ export interface ParsedEvent {
   isRecurring?: boolean;
   startTime: string; // Format "HH:mm" (e.g. "06:00")
   endTime: string; // Format "HH:mm" (e.g. "07:00")
-  category?: "work" | "health" | "leisure" | "personal" | "sleep" | "food";
+  category?: 'work' | 'health' | 'leisure' | 'personal' | 'sleep' | 'food';
 }
 
 export interface ParsedRoutine {
