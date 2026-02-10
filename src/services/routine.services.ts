@@ -1,4 +1,4 @@
-import type { Routine } from '@/generated/prisma/client.js';
+import type { Routine } from '@/generated/prisma/client';
 import { prisma } from '@/script.js';
 import type { CreateRoutineDTO, UpdateRoutineDTO } from '@/types/routine.type.js';
 

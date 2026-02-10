@@ -6,6 +6,7 @@ import 'dotenv/config';
 import authRouter from '@/routers/auth.router.js';
 import userRouter from '@/routers/user.router.js';
 import routineRouter from '@/routers/routine.router.js';
+import messageRouter from '@/routers/message.router.js';
 
 import { errorHandler } from './handlers/errorHandler.js';
 import { authenticate } from './middlewares/auth.middleware.js';
@@ -17,13 +18,16 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 
 // INFO: Routers
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', authenticate, userRouter);
 app.use('/api/routines', authenticate, routineRouter);
+app.use('/api/messages', authenticate, messageRouter);
 
 app.use(errorHandler);
 

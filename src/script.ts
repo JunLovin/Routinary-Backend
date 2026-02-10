@@ -5,8 +5,14 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 export const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const users = await prisma.user.findMany();
-  console.log(users);
+  // const users = await prisma.user.findMany();
+  // console.log(users);
+
+  const routines = await prisma.routine.findMany({
+    include: { messages: true },
+  });
+
+  const messages = await prisma.message.findMany();
 }
 
 main()
