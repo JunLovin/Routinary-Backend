@@ -1,11 +1,16 @@
 import { z } from 'zod';
 
 export const createRoutineSchema = z.object({
-  prompt: z
-    .string('Prompt is required')
+  title: z
+    .string('Title must be a string')
     .min(10, 'Prompt must be at least 10 characters')
     .max(2000, 'Prompt is too long')
     .trim(),
+  description: z
+    .string('Description must be a string')
+    .max(500, 'Description is too long')
+    .trim()
+    .optional(),
 });
 
 export const updateRoutineSchema = z.object({

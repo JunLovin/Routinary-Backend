@@ -11,7 +11,7 @@ export const getById = async (id: string): Promise<Routine | null> => {
 };
 
 export const getByUserId = async (userId: string): Promise<Routine[]> => {
-  return await prisma.routine.findMany({ where: { userId } });
+  return await prisma.routine.findMany({ where: { userId }, orderBy: { createdAt: 'desc' } });
 };
 
 export const create = async (data: CreateRoutineDTO): Promise<Routine> => {

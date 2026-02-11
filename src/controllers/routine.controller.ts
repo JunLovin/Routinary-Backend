@@ -27,6 +27,23 @@ export class RoutineController {
     res.json(routines);
   });
 
+  static create = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user?.userId;
+    const { title, description } = req.body;
+
+    if (!title) {
+      throw new AppError('Title is required', 400);
+    }
+
+    const routine = await RoutineServices.create({
+      userId: userId!,
+      title,
+      description,
+    });
+
+    res.status(201).json(routine);
+  });
+
   static delete = asyncHandler(async (req: Request, res: Response) => {
     const { routineId } = req.params;
     const userId = req.user?.userId;
