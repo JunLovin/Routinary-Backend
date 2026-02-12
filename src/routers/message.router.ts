@@ -1,6 +1,6 @@
-import { MessageController } from '@/controllers/message.controllers';
-import { validate } from '@/middlewares/validate.middleware';
-import { createMessageSchema } from '@/schemas/message.schema';
+import { MessageController } from '@/controllers/message.controllers.js';
+import { validate } from '@/middlewares/validate.middleware.js';
+import { createMessageSchema } from '@/schemas/message.schema.js';
 import express from 'express';
 
 const router = express.Router();

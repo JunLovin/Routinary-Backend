@@ -1,4 +1,3 @@
-import type { ParsedRoutine } from '@/types/event.type';
 import { GoogleGenAI } from '@google/genai';
 import 'dotenv/config';
 
@@ -120,7 +119,7 @@ CRITICAL REMINDERS:
 `.trim();
 
 
-export const getResponse = async (prompt: string): Promise<string> => {
+export const getResponse = async (prompt: string): Promise<unknown> => {
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',

@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import * as RoutineServices from '@/services/routine.services.js';
 import { AppError } from '@/utils/AppError.js';
 import { asyncHandler } from '@/handlers/asyncHandler.js';

@@ -1,3 +1,3 @@
-import type { Message } from "@/generated/prisma/client";
+import type { Message } from '@/generated/prisma/client.js';
 
-export type CreateMessageDTO = Omit<Message, "id" | "createdAt">;
+export type CreateMessageDTO = Omit<Message, 'id' | 'createdAt'>;

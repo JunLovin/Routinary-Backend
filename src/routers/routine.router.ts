@@ -1,6 +1,6 @@
 import { RoutineController } from '@/controllers/routine.controller.js';
-import { validate } from '@/middlewares/validate.middleware';
-import { createRoutineSchema } from '@/schemas/routine.schema';
+import { validate } from '@/middlewares/validate.middleware.js';
+import { createRoutineSchema } from '@/schemas/routine.schema.js';
 import express from 'express';
 
 const router = express.Router();

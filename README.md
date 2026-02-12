@@ -105,13 +105,19 @@ The API will be available at `http://localhost:3000`
 
 ### Routines
 
-| Method | Endpoint                 | Description                  | Auth Required |
-| ------ | ------------------------ | ---------------------------- | ------------- |
-| GET    | `/api/routines/me`       | Get current user's routines  | ✅            |
-| GET    | `/api/routines/:id`      | Get routine by ID            | ✅            |
-| POST   | `/api/routines/generate` | Generate routine from prompt | ✅            |
-| PUT    | `/api/routines/:id`      | Update routine               | ✅            |
-| DELETE | `/api/routines/:id`      | Delete routine               | ✅            |
+| Method | Endpoint            | Description                 | Auth Required |
+| ------ | ------------------- | --------------------------- | ------------- |
+| GET    | `/api/routines/me`  | Get current user's routines | ✅            |
+| GET    | `/api/routines/:id` | Get routine by ID           | ✅            |
+| POST   | `/api/routines/`    | Create new routine          | ✅            |
+| DELETE | `/api/routines/:id` | Delete routine              | ✅            |
+
+### Messages
+
+| Method | Endpoint                   | Description                 | Auth Required |
+| ------ | -------------------------- | --------------------------- | ------------- |
+| GET    | `/api/messages/:routineId` | Get current user's routines | ✅            |
+| POST   | `/api/messages/`           | Creates a new message       | ✅            |
 
 ### Example Request
 
@@ -207,7 +213,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] User authentication and authorization
 - [x] Routine CRUD operations
 - [x] Zod validation
-- [ ] Gemini AI integration for .ics generation
+- [x] Gemini AI integration for .ics generation
 - [ ] Rate limiting
 - [ ] Unit and integration tests
 - [ ] API documentation with Swagger
