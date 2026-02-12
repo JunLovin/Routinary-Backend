@@ -1,0 +1,57 @@
+import type { Request, Response } from 'express';
+import { asyncHandler } from '@/handlers/asyncHandler.js';
+import * as MessageServices from '@/services/message.services.js';
+import * as RoutineServices from '@/services/routine.services.js';
+import { AppError } from '@/utils/AppError.js';
+
+export class MessageController {
+  static getAll = asyncHandler(async (_: Request, res: Response) => {
+    const messages = await MessageServices.getAll();
+    res.json(messages);
+  });
+
+  static getByRoutine = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user?.userId;
+    const { routineId } = req.params;
+
+    if (!userId) {
+      throw new AppError('Unauthorized', 401);
+    }
+  
+    const routine = await RoutineServices.getById(routineId as string); 
+
+    if (!routine) {
+      throw new AppError('Routine not found', 404);
+    }
+
+    if (routine.userId !== userId) {
+      throw new AppError('Forbidden', 403);
+    }
+      
+    const messages = await MessageServices.getByRoutineId(routineId as string);
+    res.json(messages);
+  });
+
+  static create = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user?.userId;
+    const { routineId, sender, content } = req.body;
+
+    if (!userId) {
+      throw new AppError('Unauthorized', 404);
+    }
+
+    const routine = await RoutineServices.getById(routineId as string);
+
+    if (!routine) {
+      throw new AppError('Routine not found', 404);
+    }
+
+    if (routine.userId !== userId) {
+      throw new AppError('Forbidden', 403);
+    }
+
+    const message = await MessageServices.create({ routineId, sender, content, userId: userId! });
+
+    res.status(201).json(message);
+  });
+}

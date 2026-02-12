@@ -1,9 +1,7 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import * as RoutineServices from '@/services/routine.services.js';
 import { AppError } from '@/utils/AppError.js';
 import { asyncHandler } from '@/handlers/asyncHandler.js';
-import { parsePromptToEvents } from '@/services/gemini.services.js';
-import { generateICS } from '@/utils/icsGenerator.js';
 
 export class RoutineController {
   static getAll = asyncHandler(async (_: Request, res: Response) => {
@@ -29,56 +27,23 @@ export class RoutineController {
     res.json(routines);
   });
 
-  static generate = asyncHandler(async (req: Request, res: Response) => {
+  static create = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const { prompt } = req.body;
+    const { title, description } = req.body;
 
-    const jsonEvents = await parsePromptToEvents(prompt as string);
-    const icsContent = generateICS(jsonEvents);
-    
-    const newRoutine = await RoutineServices.create({
-      userId: userId!,
-      title: jsonEvents.suggestedTitle || 'My Routine',
-      description: '',
-      prompt,
-      icsContent,
-    });
-
-    res.status(201).json(newRoutine);
-  });
-
-  static update = asyncHandler(async (req: Request, res: Response) => {
-    const { routineId } = req.params;
-    const userId = req.user?.userId;
-
-    const routine = await RoutineServices.getById(routineId as string);
-
-    if (!routine) {
-      throw new AppError('Routine not found', 404);
-    } 
-    if (routine.userId !== userId) {
-      throw new AppError('Forbidden: You don\'t own this routine', 403);
-    } 
-
-    const { title, description, prompt } = req.body;
-
-    let icsContent = routine.icsContent;
-
-    if (prompt && prompt !== routine.prompt) {
-      const jsonEvents = await parsePromptToEvents(prompt);
-      icsContent = generateICS(jsonEvents);
+    if (!title) {
+      throw new AppError('Title is required', 400);
     }
 
-    const updatedRoutine = await RoutineServices.update(routineId as string, {
+    const routine = await RoutineServices.create({
+      userId: userId!,
       title,
       description,
-      prompt,
-      icsContent
     });
 
-    res.json(updatedRoutine);
+    res.status(201).json(routine);
   });
- 
+
   static delete = asyncHandler(async (req: Request, res: Response) => {
     const { routineId } = req.params;
     const userId = req.user?.userId;
