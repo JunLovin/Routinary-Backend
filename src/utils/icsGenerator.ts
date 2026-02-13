@@ -1,6 +1,7 @@
 import type { ParsedRoutine } from '@/types/event.type';
 
-export const generateICS = (data: ParsedRoutine): string => {
+export const generateICS = (dataStr: string): string => {
+  const data = JSON.parse(dataStr) as ParsedRoutine;
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0]?.replace(/-/g, ''); // "20260129"
 
@@ -8,7 +9,7 @@ export const generateICS = (data: ParsedRoutine): string => {
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//Routinary//EN',
-    `X-WR-CALNAME:${data.suggestedTitle}`
+    `X-WR-CALNAME:${data.suggestedTitle || 'Routinary Events'}`,
   ];
 
   const body = data.events.map((e) => {

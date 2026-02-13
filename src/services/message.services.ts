@@ -32,6 +32,10 @@ export const create = async (data: CreateMessageDTO): Promise<Message> => {
   }
 };
 
+export const update = async (id: string, content: string): Promise<Message> => {
+  return await prisma.message.update({ where: { id }, data: { content } });
+};
+
 export const deleteById = async (id: string): Promise<Message> => {
   return await prisma.message.delete({ where: { id } });
 };

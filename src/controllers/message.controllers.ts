@@ -3,6 +3,8 @@ import { asyncHandler } from '@/handlers/asyncHandler.js';
 import * as MessageServices from '@/services/message.services.js';
 import * as RoutineServices from '@/services/routine.services.js';
 import { AppError } from '@/utils/AppError.js';
+import { generateICS } from '@/utils/icsGenerator';
+import type { ParsedRoutine } from '@/types/event.type';
 
 export class MessageController {
   static getAll = asyncHandler(async (_: Request, res: Response) => {
@@ -52,6 +54,15 @@ export class MessageController {
 
     const message = await MessageServices.create({ routineId, sender, content, userId: userId! });
 
-    res.status(201).json(message);
+    if (typeof message !== 'string') {
+      const icsContent = generateICS(message.content as any);
+      const updatedMessage = await MessageServices.update(message.id, icsContent);
+      await RoutineServices.update(updatedMessage.routineId, { title: (JSON.parse(message.content) as ParsedRoutine).suggestedTitle || 'Daily Routine' });
+      res.setHeader('Content-Type', 'text/calendar');
+      res.setHeader('Content-Disposition', 'attachment; filename: event.ics');
+      res.status(201).json(updatedMessage);
+    } else {
+      res.status(201).json(message);
+    }
   });
 }
