@@ -1,4 +1,5 @@
 import type { ParsedRoutine } from '@/types/event.type';
+import { tryParseJSON } from './utils';
 
 export const generateICS = (dataStr: string): string => {
   const data = JSON.parse(dataStr) as ParsedRoutine;

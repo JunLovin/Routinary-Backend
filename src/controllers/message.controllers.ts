@@ -5,6 +5,7 @@ import * as RoutineServices from '@/services/routine.services.js';
 import { AppError } from '@/utils/AppError.js';
 import { generateICS } from '@/utils/icsGenerator';
 import type { ParsedRoutine } from '@/types/event.type';
+import { tryParseJSON } from '@/utils/utils';
 
 export class MessageController {
   static getAll = asyncHandler(async (_: Request, res: Response) => {
@@ -54,7 +55,9 @@ export class MessageController {
 
     const message = await MessageServices.create({ routineId, sender, content, userId: userId! });
 
-    if (typeof message !== 'string') {
+    const contentParsed = tryParseJSON(message.content);
+
+    if (contentParsed) {
       const icsContent = generateICS(message.content as any);
       const updatedMessage = await MessageServices.update(message.id, icsContent);
       await RoutineServices.update(updatedMessage.routineId, { title: (JSON.parse(message.content) as ParsedRoutine).suggestedTitle || 'Daily Routine' });
