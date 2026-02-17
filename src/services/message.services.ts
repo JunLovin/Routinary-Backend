@@ -2,7 +2,6 @@ import type { Message } from '@/generated/prisma/client.js';
 import { prisma } from '@/script';
 import type { CreateMessageDTO } from '@/types/message.type.js';
 import * as GeminiService from '@/services/gemini.services.js';
-import type { tryParseJSON } from '@/utils/utils';
 
 export const getAll = async (): Promise<Message[]> => {
   return await prisma.message.findMany();
