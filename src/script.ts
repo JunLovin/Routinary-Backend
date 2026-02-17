@@ -12,8 +12,6 @@ async function main() {
     include: { messages: true },
   });
 
-  console.log(routines);
-
   const messages = await prisma.message.findMany();
 }
 
